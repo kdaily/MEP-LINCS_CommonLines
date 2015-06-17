@@ -6,7 +6,7 @@ library(synapseClient)
 library(rGithubClient)
 synapseLogin()
 
-repo <- getRepo("kdaily/MEP-LINCS_Common_Lines", ref="branch", refName="master")
+repo <- getRepo("kdaily/MEP-LINCS_CommonLines", ref="branch", refName="master")
 thisScript <- getPermlink(repo, "code/getData.R")
 
 projectId <- "syn4259323"
@@ -19,10 +19,15 @@ ccleLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
 id <- "syn2293298"
 fn <- "CCLE_GE_LINCS.csv"
 ccleGEObj <- synGet(id)
-ccleGE <- fread(getFileLocation(ccleGEObj), data.table=FALSE)
-ccleGELINCS <- ccleGE[, ccleLineNames]
+
+# Duplicate columns (though diff cell lines) - get rid of them
+ccleGE <- fread(getFileLocation(ccleGEObj), drop=c("TT", "NCIH292"), data.table=FALSE)
+ccleGELINCS <- ccleGE %>% 
+  select(V1, one_of(ccleLineNames)) %>%
+  dplyr::rename(GeneSymbol=V1)
+
 write.csv(ccleGELINCS, file=fn)
-f <- File(fn, parentId=proj@properties$id)
+f <- File(fn, name="CCLE Gene Expression - LINCS Common Lines", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="CCLE", dataType="mRNA", fileType="genomicMatrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
