@@ -7,7 +7,7 @@ library(rGithubClient)
 synapseLogin()
 
 repo <- getRepo("kdaily/MEP-LINCS_Common_Lines", ref="branch", refName="master")
-script <- getPermlink(repo, "code/getData.R")
+thisScript <- getPermlink(repo, "code/getData.R")
 
 projectId <- "syn4259323"
 proj <- synGet(projectId)
@@ -17,90 +17,222 @@ ccleLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
 
 # CCLE Gene Expression (maybe processed?)
 id <- "syn2293298"
+fn <- "CCLE_GE_LINCS.csv"
 ccleGEObj <- synGet(id)
 ccleGE <- fread(getFileLocation(ccleGEObj), data.table=FALSE)
 ccleGELINCS <- ccleGE[, ccleLineNames]
-write.csv(ccleGELINCS, file="CCLE_GE_LINCS.csv")
-f <- File("CCLE_GE_LINCS.csv", parentId=proj)
+write.csv(ccleGELINCS, file=fn)
+f <- File(fn, parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="CCLE", dataType="mRNA", fileType="genomicMatrix")
 act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+f <- synStore(f)
 
 # CCLE Copy Number
-ccleCNAObj <- synGet("syn2293299")
+id <- "syn2293299"
+fn <- "CCLE_CNA_LINCS.csv"
+ccleCNAObj <- synGet(id)
 ccleCNA <- fread(getFileLocation(ccleCNAObj), data.table=FALSE)
 ccleCNALINCS <- ccleCNA[, ccleLineNames]
+write.csv(ccleCNALINCS, file=fn)
+f <- File(fn, parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="CCLE", dataType="DNA", 
+                             dataSubType="CNA", fileType="genomicMatrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+# f <- synStore(f)
 
 # CCLE Drug EC50
 # Data is cell lines (rows) x drugs (columns)
-ccleEC50Obj <- synGet("syn2293304")
+id <- "syn2293304"
+fn <- "CCLE_EC50_LINCS.csv"
+ccleEC50Obj <- synGet(id)
 ccleEC50LINCS <- fread(getFileLocation(ccleEC50Obj), data.table=FALSE) %>%
   rename(cell_line_name=V1) %>% filter(cell_line_name %in% ccleLineNames) %>%
   melt(id.vars='cell_line_name') %>%
   dcast(variable ~ cell_line_name, value.var = 'value') %>%
   rename(drug=variable)
+write.csv(ccleEC50LINCS, file=fn)
+f <- File(fn, parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="CCLE", dataType="drug",
+                             dataSubType="EC50", fileType="matrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+# f <- synStore(f)
 
 # CCLE Drug IC50
 # Data is cell lines (rows) x drugs (columns)
-ccleIC50Obj <- synGet("syn2293303")
+id <- "syn2293303"
+fn <- "CCLE_IC50_LINCS.csv"
+ccleIC50Obj <- synGet(id)
 ccleIC50LINCS <- fread(getFileLocation(ccleIC50Obj), data.table=FALSE) %>%
   rename(cell_line_name=V1) %>% filter(cell_line_name %in% ccleLineNames) %>%
   melt(id.vars='cell_line_name') %>%
   dcast(variable ~ cell_line_name, value.var = 'value') %>%
   rename(drug=variable)
+write.csv(ccleIC50LINCS, file=fn)
+f <- File(fn, parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="CCLE", dataType="drug",
+                             dataSubType="IC50", fileType="matrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+# f <- synStore(f)
 
 # Broad CTD2
 ctd2LineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
 
 # AUC
-ctd2AUCObj <- synGet("syn4260138")
+id <- "syn4260138"
+fn <- "CTD2_AUC_LINCS.csv"
+ctd2AUCObj <- synGet(id)
 ctd2AUC <- fread(getFileLocation(ctd2AUCObj), data.table=FALSE)
 ctd2AUCLINCS <- ctd2AUC %>% filter(cell_line_name %in% ctd2LineNames)
-write.csv(ctd2AUCLINCS, file="CTD2_AUC_LINCS.csv", row.names=FALSE)
+write.csv(ctd2AUCLINCS, file=fn, row.names=FALSE)
+f <- File(fn, parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="CTD2", dataType="drug",
+                             dataSubType="AUC", fileType="matrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+# f <- synStore(f)
 
 # Raw viability
-ctd2RawViabilityObj <- synGet("syn4260136")
+id <- "syn4260136"
+fn <- "CTD2_RawViability_LINCS.csv"
+ctd2RawViabilityObj <- synGet(id)
 ctd2RawViability <- fread(getFileLocation(ctd2RawViabilityObj), data.table=FALSE)
 ctd2RawViabilityLINCS <- ctd2RawViability %>% filter(cell_line_name %in% ctd2LineNames)
+write.csv(ctd2RawViabilityLINCS, file=fn, row.names=FALSE)
+f <- File(fn, parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="CTD2", dataType="drug",
+                             dataSubType="viability", fileType="matrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+# f <- synStore(f)
 
 # Avg pct viability
-ctd2PctViabilityObj <- synGet("syn4260137")
+id <- "syn4260137"
+fn <- "CTD2_AvgPctViability_LINCS.csv"
+ctd2PctViabilityObj <- synGet(id)
 ctd2PctViability <- fread(getFileLocation(ctd2PctViabilityObj), data.table=FALSE)
 ctd2PctViabilityLINCS <- ctd2PctViability %>% filter(cell_line_name %in% ctd2LineNames)
+write.csv(ctd2PctViabilityLINCS, file=fn, row.names=FALSE)
+f <- File(fn, parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="CTD2", dataType="drug",
+                             dataSubType="viability", fileType="matrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+# f <- synStore(f)
 
 # Human Protein Atlas
 hpaLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
-hpaObj <- synGet("syn4487737")
+
+id <- "syn4487737"
+hpaObj <- synGet(id)
 hpa <- fread(getFileLocation(hpaObj), data.table=FALSE)
 hpaLINCS <- hpa %>% filter(Sample %in% hpaLineNames)
 
-hpaLINCSMatrix <- hpaLINCS %>% dcast(Gene ~ Sample, value.var="Value")
+fn <- "HPA_FPKM_LINCS.csv"
+hpaLINCSFPKM <- hpaLINCS %>% dcast(Gene ~ Sample, value.var="Value")
+write.csv(hpaLINCSFPKM, file=fn, row.names=FALSE)
+f <- File(fn, parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="HPA", dataType="mRNA",
+                             dataSubType="FPKM", fileType="genomicMatrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+# f <- synStore(f)
+
+fn <- "HPA_Abundance_LINCS.csv"
 hpaLINCSAbundance <- hpaLINCS %>% dcast(Gene ~ Sample, value.var="Abundance")
+write.csv(hpaLINCSAbundance, file=fn, row.names=FALSE)
+f <- File(fn, parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="HPA", dataType="mRNA",
+                             dataSubType="Abundance", fileType="genomicMatrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+# f <- synStore(f)
 
 # JW Gray
 grayLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
-grayExonObj <- synGet("syn2346647")
+
+id <- "syn2346647"
+fn <- "JWGray_Exon_LINCS.csv"
+grayExonObj <- synGet(id)
 grayExon <- fread(getFileLocation(grayExonObj), data.table=FALSE)
 grayExonLINCS <- grayExon[, c("GeneSymbol", intersect(grayLineNames, colnames(grayExon)))]
+write.csv(grayExonLINCS, file=fn, row.names=FALSE)
+f <- File(fn, parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="JWGray", dataType="mRNA",
+                             dataSubType="expr", fileType="genomicMatrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+# f <- synStore(f)
 
-grayRPPAObj <- synGet("syn2347012")
+id <- "syn2347012"
+fn <- "JWGray_RPPA_LINCS.csv"
+grayRPPAObj <- synGet(id)
 grayRPPA <- fread(getFileLocation(grayRPPAObj), data.table=FALSE)
 grayRPPAMeta <- grayRPPA[1, ]
 t(as.data.frame(grayRPPA[-1, ]))
 grayRPPALINCS <- grayRPPA[, c("GeneSymbol", intersect(grayLineNames, colnames(grayRPPA)))]
+write.csv(grayRPPALINCS, file=fn, row.names=FALSE)
+f <- File(fn, parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="JWGray", dataType="protein",
+                             dataSubType="RPPA", fileType="genomicMatrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+# f <- synStore(f)
 
-graySNP6Obj <- synGet("syn2347009")
+id <- "syn2347009"
+fn <- "JWGray_SNP6_LINCS.csv"
+graySNP6Obj <- synGet(id)
 graySNP6 <- fread(getFileLocation(graySNP6Obj), data.table=FALSE)
 graySNP6LINCS <- graySNP6[, c("chrom", "start", "end", intersect(grayLineNames, colnames(graySNP6)))]
+write.csv(graySNP6LINCS, file=fn, row.names=FALSE)
+f <- File(fn, parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="JWGray", dataType="DNA",
+                             dataSubType="CNA", fileType="genomicMatrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+# f <- synStore(f)
 
-grayWesternObj <- synGet("syn2347011")
+id <- "syn2347011"
+fn <- "JWGray_Western_LINCS.csv"
+grayWesternObj <- synGet(id)
 grayWestern <- fread(getFileLocation(grayWesternObj), data.table=FALSE)
 grayWesternLINCS <- grayWestern[, c("Protein", intersect(grayLineNames, colnames(grayWestern)))]
+write.csv(grayWesternLINCS, file=fn, row.names=FALSE)
+f <- File(fn, parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="JWGray", dataType="protein",
+                             dataSubType="Western", fileType="matrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+# f <- synStore(f)
 
-grayDblObj <- synGet("syn2347014")
+id <- "syn2347011"
+fn <- "JWGray_DblTime_LINCS.csv"
+grayDblObj <- synGet(id)
 grayDbl <- fread(getFileLocation(grayDblObj), data.table=FALSE)
 grayDblLINCS <- grayDbl %>% filter(CellLineName %in% grayLineNames)
+write.csv(grayDblLINCS, file=fn, row.names=FALSE)
+f <- File(fn, parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="JWGray", dataType="cell_line",
+                             dataSubType="DoublingTime", fileType="matrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+# f <- synStore(f)
 
-grayRNASeqMatObj <- synGet("syn2347004")
+id <- "syn2347004"
+fn <- "JWGray_RNASeq_LINCS.csv"
+grayRNASeqMatObj <- synGet()
 grayRNASeqMat <- fread(getFileLocation(grayRNASeqMatObj), data.table=FALSE)
 
 grayRNASeqMatLINCS <- grayRNASeqMat %>% select(Gene_ID, FID, Seq_Name, EnsEMBL_Gene_ID, 
-                                               one_of(intersect(grayLineNames, colnames(grayWestern))))
+                                               one_of(intersect(grayLineNames, colnames(grayRNASeqMat))))
+write.csv(grayRNASeqMatLINCS, file=fn, row.names=FALSE)
+f <- File(fn, parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="JWGray", dataType="mRNA",
+                             dataType="",
+                             fileType="genomicMatrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+# f <- synStore(f)
