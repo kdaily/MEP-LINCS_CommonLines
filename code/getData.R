@@ -63,3 +63,33 @@ hpaLINCS <- hpa %>% filter(Sample %in% hpaLineNames)
 
 hpaLINCSMatrix <- hpaLINCS %>% dcast(Gene ~ Sample, value.var="Value")
 hpaLINCSAbundance <- hpaLINCS %>% dcast(Gene ~ Sample, value.var="Abundance")
+
+# JW Gray
+grayLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
+grayExonObj <- synGet("syn2346647")
+grayExon <- fread(getFileLocation(grayExonObj), data.table=FALSE)
+grayExonLINCS <- grayExon[, c("GeneSymbol", intersect(grayLineNames, colnames(grayExon)))]
+
+grayRPPAObj <- synGet("syn2347012")
+grayRPPA <- fread(getFileLocation(grayRPPAObj), data.table=FALSE)
+grayRPPAMeta <- grayRPPA[1, ]
+t(as.data.frame(grayRPPA[-1, ]))
+grayRPPALINCS <- grayRPPA[, c("GeneSymbol", intersect(grayLineNames, colnames(grayRPPA)))]
+
+graySNP6Obj <- synGet("syn2347009")
+graySNP6 <- fread(getFileLocation(graySNP6Obj), data.table=FALSE)
+graySNP6LINCS <- graySNP6[, c("chrom", "start", "end", intersect(grayLineNames, colnames(graySNP6)))]
+
+grayWesternObj <- synGet("syn2347011")
+grayWestern <- fread(getFileLocation(grayWesternObj), data.table=FALSE)
+grayWesternLINCS <- grayWestern[, c("Protein", intersect(grayLineNames, colnames(grayWestern)))]
+
+grayDblObj <- synGet("syn2347014")
+grayDbl <- fread(getFileLocation(grayDblObj), data.table=FALSE)
+grayDblLINCS <- grayDbl %>% filter(CellLineName %in% grayLineNames)
+
+grayRNASeqMatObj <- synGet("syn2347004")
+grayRNASeqMat <- fread(getFileLocation(grayRNASeqMatObj), data.table=FALSE)
+
+grayRNASeqMatLINCS <- grayRNASeqMat %>% select(Gene_ID, FID, Seq_Name, EnsEMBL_Gene_ID, 
+                                               one_of(intersect(grayLineNames, colnames(grayWestern))))
