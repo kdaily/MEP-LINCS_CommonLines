@@ -40,7 +40,7 @@ synSetAnnotations(f) <- list(source="CCLE", dataType="DNA",
                              dataSubType="CNA", fileType="genomicMatrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
-# f <- synStore(f)
+f <- synStore(f)
 
 # CCLE Drug EC50
 # Data is cell lines (rows) x drugs (columns)
@@ -58,7 +58,7 @@ synSetAnnotations(f) <- list(source="CCLE", dataType="drug",
                              dataSubType="EC50", fileType="matrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
-# f <- synStore(f)
+f <- synStore(f)
 
 # CCLE Drug IC50
 # Data is cell lines (rows) x drugs (columns)
@@ -76,7 +76,7 @@ synSetAnnotations(f) <- list(source="CCLE", dataType="drug",
                              dataSubType="IC50", fileType="matrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
-# f <- synStore(f)
+f <- synStore(f)
 
 # Broad CTD2
 ctd2LineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
@@ -93,7 +93,7 @@ synSetAnnotations(f) <- list(source="CTD2", dataType="drug",
                              dataSubType="AUC", fileType="matrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
-# f <- synStore(f)
+f <- synStore(f)
 
 # Raw viability
 id <- "syn4260136"
@@ -107,7 +107,7 @@ synSetAnnotations(f) <- list(source="CTD2", dataType="drug",
                              dataSubType="viability", fileType="matrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
-# f <- synStore(f)
+f <- synStore(f)
 
 # Avg pct viability
 id <- "syn4260137"
@@ -121,7 +121,7 @@ synSetAnnotations(f) <- list(source="CTD2", dataType="drug",
                              dataSubType="viability", fileType="matrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
-# f <- synStore(f)
+f <- synStore(f)
 
 # Human Protein Atlas
 hpaLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
@@ -139,7 +139,7 @@ synSetAnnotations(f) <- list(source="HPA", dataType="mRNA",
                              dataSubType="FPKM", fileType="genomicMatrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
-# f <- synStore(f)
+f <- synStore(f)
 
 fn <- "HPA_Abundance_LINCS.csv"
 hpaLINCSAbundance <- hpaLINCS %>% dcast(Gene ~ Sample, value.var="Abundance")
@@ -149,7 +149,7 @@ synSetAnnotations(f) <- list(source="HPA", dataType="mRNA",
                              dataSubType="Abundance", fileType="genomicMatrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
-# f <- synStore(f)
+f <- synStore(f)
 
 # JW Gray
 grayLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
@@ -165,7 +165,7 @@ synSetAnnotations(f) <- list(source="JWGray", dataType="mRNA",
                              dataSubType="expr", fileType="genomicMatrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
-# f <- synStore(f)
+f <- synStore(f)
 
 id <- "syn2347012"
 fn <- "JWGray_RPPA_LINCS.csv"
@@ -180,7 +180,7 @@ synSetAnnotations(f) <- list(source="JWGray", dataType="protein",
                              dataSubType="RPPA", fileType="genomicMatrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
-# f <- synStore(f)
+f <- synStore(f)
 
 id <- "syn2347009"
 fn <- "JWGray_SNP6_LINCS.csv"
@@ -193,7 +193,7 @@ synSetAnnotations(f) <- list(source="JWGray", dataType="DNA",
                              dataSubType="CNA", fileType="genomicMatrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
-# f <- synStore(f)
+f <- synStore(f)
 
 id <- "syn2347011"
 fn <- "JWGray_Western_LINCS.csv"
@@ -206,7 +206,7 @@ synSetAnnotations(f) <- list(source="JWGray", dataType="protein",
                              dataSubType="Western", fileType="matrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
-# f <- synStore(f)
+f <- synStore(f)
 
 id <- "syn2347011"
 fn <- "JWGray_DblTime_LINCS.csv"
@@ -219,7 +219,7 @@ synSetAnnotations(f) <- list(source="JWGray", dataType="cell_line",
                              dataSubType="DoublingTime", fileType="matrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
-# f <- synStore(f)
+f <- synStore(f)
 
 id <- "syn2347004"
 fn <- "JWGray_RNASeq_LINCS.csv"
@@ -235,4 +235,4 @@ synSetAnnotations(f) <- list(source="JWGray", dataType="mRNA",
                              fileType="genomicMatrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
-# f <- synStore(f)
+f <- synStore(f)
