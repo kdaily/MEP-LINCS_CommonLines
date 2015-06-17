@@ -227,7 +227,7 @@ f <- synStore(f)
 
 id <- "syn2347004"
 fn <- "JWGray_RNASeq_LINCS.csv"
-grayRNASeqMatObj <- synGet()
+grayRNASeqMatObj <- synGet(id)
 grayRNASeqMat <- fread(getFileLocation(grayRNASeqMatObj), data.table=FALSE)
 
 grayRNASeqMatLINCS <- grayRNASeqMat %>% select(Gene_ID, FID, Seq_Name, EnsEMBL_Gene_ID, 
