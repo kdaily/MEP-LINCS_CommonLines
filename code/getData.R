@@ -176,9 +176,8 @@ id <- "syn2347012"
 fn <- "JWGray_RPPA_LINCS.csv"
 grayRPPAObj <- synGet(id)
 grayRPPA <- fread(getFileLocation(grayRPPAObj), data.table=FALSE)
-grayRPPAMeta <- grayRPPA[1, ]
-t(as.data.frame(grayRPPA[-1, ]))
-grayRPPALINCS <- grayRPPA[, c("GeneSymbol", intersect(grayLineNames, colnames(grayRPPA)))]
+
+grayRPPALINCS <- grayRPPA[, c("Sample", "FullyValidated", intersect(grayLineNames, colnames(grayRPPA)))]
 write.csv(grayRPPALINCS, file=fn, row.names=FALSE)
 f <- File(fn, name="JW Gray RPPA", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="JWGray", dataType="protein",
