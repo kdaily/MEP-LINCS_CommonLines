@@ -139,7 +139,7 @@ hpaLINCS <- hpa %>% filter(Sample %in% hpaLineNames)
 fn <- "HPA_FPKM_LINCS.csv"
 hpaLINCSFPKM <- hpaLINCS %>% dcast(Gene ~ Sample, value.var="Value")
 write.csv(hpaLINCSFPKM, file=fn, row.names=FALSE)
-f <- File(fn, parentId=proj@properties$id)
+f <- File(fn, name="HPA RNASeq FPKM", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="HPA", dataType="mRNA",
                              dataSubType="FPKM", fileType="genomicMatrix")
 act <- Activity(used=id, executed=thisScript)
@@ -149,7 +149,7 @@ f <- synStore(f)
 fn <- "HPA_Abundance_LINCS.csv"
 hpaLINCSAbundance <- hpaLINCS %>% dcast(Gene ~ Sample, value.var="Abundance")
 write.csv(hpaLINCSAbundance, file=fn, row.names=FALSE)
-f <- File(fn, parentId=proj@properties$id)
+f <- File(fn, name="HPA RNASeq Abundance", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="HPA", dataType="mRNA",
                              dataSubType="Abundance", fileType="genomicMatrix")
 act <- Activity(used=id, executed=thisScript)
@@ -165,7 +165,7 @@ grayExonObj <- synGet(id)
 grayExon <- fread(getFileLocation(grayExonObj), data.table=FALSE)
 grayExonLINCS <- grayExon[, c("GeneSymbol", intersect(grayLineNames, colnames(grayExon)))]
 write.csv(grayExonLINCS, file=fn, row.names=FALSE)
-f <- File(fn, parentId=proj@properties$id)
+f <- File(fn, name="JW Gray Exon", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="JWGray", dataType="mRNA",
                              dataSubType="expr", fileType="genomicMatrix")
 act <- Activity(used=id, executed=thisScript)
@@ -180,7 +180,7 @@ grayRPPAMeta <- grayRPPA[1, ]
 t(as.data.frame(grayRPPA[-1, ]))
 grayRPPALINCS <- grayRPPA[, c("GeneSymbol", intersect(grayLineNames, colnames(grayRPPA)))]
 write.csv(grayRPPALINCS, file=fn, row.names=FALSE)
-f <- File(fn, parentId=proj@properties$id)
+f <- File(fn, name="JW Gray RPPA", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="JWGray", dataType="protein",
                              dataSubType="RPPA", fileType="genomicMatrix")
 act <- Activity(used=id, executed=thisScript)
@@ -193,7 +193,7 @@ graySNP6Obj <- synGet(id)
 graySNP6 <- fread(getFileLocation(graySNP6Obj), data.table=FALSE)
 graySNP6LINCS <- graySNP6[, c("chrom", "start", "end", intersect(grayLineNames, colnames(graySNP6)))]
 write.csv(graySNP6LINCS, file=fn, row.names=FALSE)
-f <- File(fn, parentId=proj@properties$id)
+f <- File(fn, name="JW Gray SNP6", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="JWGray", dataType="DNA",
                              dataSubType="CNA", fileType="genomicMatrix")
 act <- Activity(used=id, executed=thisScript)
@@ -206,7 +206,7 @@ grayWesternObj <- synGet(id)
 grayWestern <- fread(getFileLocation(grayWesternObj), data.table=FALSE)
 grayWesternLINCS <- grayWestern[, c("Protein", intersect(grayLineNames, colnames(grayWestern)))]
 write.csv(grayWesternLINCS, file=fn, row.names=FALSE)
-f <- File(fn, parentId=proj@properties$id)
+f <- File(fn, name="JW Gray Western Blot", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="JWGray", dataType="protein",
                              dataSubType="Western", fileType="matrix")
 act <- Activity(used=id, executed=thisScript)
@@ -219,7 +219,7 @@ grayDblObj <- synGet(id)
 grayDbl <- fread(getFileLocation(grayDblObj), data.table=FALSE)
 grayDblLINCS <- grayDbl %>% filter(CellLineName %in% grayLineNames)
 write.csv(grayDblLINCS, file=fn, row.names=FALSE)
-f <- File(fn, parentId=proj@properties$id)
+f <- File(fn, name="JW Gray Doubling Time", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="JWGray", dataType="cell_line",
                              dataSubType="DoublingTime", fileType="matrix")
 act <- Activity(used=id, executed=thisScript)
@@ -234,7 +234,7 @@ grayRNASeqMat <- fread(getFileLocation(grayRNASeqMatObj), data.table=FALSE)
 grayRNASeqMatLINCS <- grayRNASeqMat %>% select(Gene_ID, FID, Seq_Name, EnsEMBL_Gene_ID, 
                                                one_of(intersect(grayLineNames, colnames(grayRNASeqMat))))
 write.csv(grayRNASeqMatLINCS, file=fn, row.names=FALSE)
-f <- File(fn, parentId=proj@properties$id)
+f <- File(fn, name="JW Gray RNASeq Expression", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="JWGray", dataType="mRNA",
                              dataType="",
                              fileType="genomicMatrix")
