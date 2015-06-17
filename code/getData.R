@@ -235,8 +235,46 @@ grayRNASeqMatLINCS <- grayRNASeqMat %>% select(Gene_ID, FID, Seq_Name, EnsEMBL_G
 write.csv(grayRNASeqMatLINCS, file=fn, row.names=FALSE)
 f <- File(fn, name="JW Gray RNASeq Expression", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="JWGray", dataType="mRNA",
-                             dataType="",
+                             dataSubType="",
                              fileType="genomicMatrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+f <- synStore(f)
+
+# Sanger
+sangerLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
+
+id <- "syn4513928"
+sangerSensObj <- synGet(id)
+sangerSense <- fread(getFileLocation(sangerSensObj), data.table=FALSE)
+
+sangerSenseLINCS <- sangerSense %>%
+  filter(Cell.Line %in% sangerLineNames)
+
+sangerSenseIC50LINCS <- sangerSenseLINCS %>%
+  select(Cell.Line, Cosmic_ID, Cancer.Type, Tissue, ends_with("IC_50"))
+colnames(sangerSenseIC50LINCS) <- gsub("_IC_50", "", colnames(sangerSenseIC50LINCS))
+
+fn <- "Sanger_IC50_LINCS.csv"
+write.csv(sangerSenseIC50LINCS, file=fn, row.names=FALSE)
+f <- File(fn, name="Sanger IC50", parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="Sanger", dataType="drug",
+                             dataSubType="IC50",
+                             fileType="matrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+f <- synStore(f)
+
+sangerSenseAUCLINCS <- sangerSenseLINCS %>%
+  select(Cell.Line, Cosmic_ID, Cancer.Type, Tissue, ends_with("AUC"))
+colnames(sangerSenseAUCLINCS) <- gsub("_AUC", "", colnames(sangerSenseAUCLINCS))
+
+fn <- "Sanger_AUC_LINCS.csv"
+write.csv(sangerSenseAUCLINCS, file=fn, row.names=FALSE)
+f <- File(fn, name="Sanger AUC", parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="Sanger", dataType="drug",
+                             dataSubType="AUC",
+                             fileType="matrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
 f <- synStore(f)
