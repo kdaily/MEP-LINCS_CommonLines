@@ -27,7 +27,7 @@ ccleGELINCS <- ccleGE %>%
   dplyr::rename(GeneSymbol=V1)
 
 write.csv(ccleGELINCS, file=fn)
-f <- File(fn, name="CCLE Gene Expression - LINCS Common Lines", parentId=proj@properties$id)
+f <- File(fn, name="CCLE Gene Expression", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="CCLE", dataType="mRNA", fileType="genomicMatrix")
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
@@ -40,7 +40,7 @@ ccleCNAObj <- synGet(id)
 ccleCNA <- fread(getFileLocation(ccleCNAObj), data.table=FALSE)
 ccleCNALINCS <- ccleCNA[, ccleLineNames]
 write.csv(ccleCNALINCS, file=fn)
-f <- File(fn, parentId=proj@properties$id)
+f <- File(fn, name="CCLE CNA", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="CCLE", dataType="DNA", 
                              dataSubType="CNA", fileType="genomicMatrix")
 act <- Activity(used=id, executed=thisScript)
@@ -58,7 +58,7 @@ ccleEC50LINCS <- fread(getFileLocation(ccleEC50Obj), data.table=FALSE) %>%
   dcast(variable ~ cell_line_name, value.var = 'value') %>%
   rename(drug=variable)
 write.csv(ccleEC50LINCS, file=fn)
-f <- File(fn, parentId=proj@properties$id)
+f <- File(fn, name="CCLE EC50", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="CCLE", dataType="drug",
                              dataSubType="EC50", fileType="matrix")
 act <- Activity(used=id, executed=thisScript)
@@ -76,7 +76,7 @@ ccleIC50LINCS <- fread(getFileLocation(ccleIC50Obj), data.table=FALSE) %>%
   dcast(variable ~ cell_line_name, value.var = 'value') %>%
   rename(drug=variable)
 write.csv(ccleIC50LINCS, file=fn)
-f <- File(fn, parentId=proj@properties$id)
+f <- File(fn, name="CCLE IC50", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="CCLE", dataType="drug",
                              dataSubType="IC50", fileType="matrix")
 act <- Activity(used=id, executed=thisScript)
