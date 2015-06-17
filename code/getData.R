@@ -212,7 +212,7 @@ act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
 f <- synStore(f)
 
-id <- "syn2347011"
+id <- "syn2347014"
 fn <- "JWGray_DblTime_LINCS.csv"
 grayDblObj <- synGet(id)
 grayDbl <- fread(getFileLocation(grayDblObj), data.table=FALSE)
