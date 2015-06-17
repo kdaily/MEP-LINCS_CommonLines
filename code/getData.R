@@ -54,3 +54,12 @@ ctd2RawViabilityLINCS <- ctd2RawViability %>% filter(cell_line_name %in% ctd2Lin
 ctd2PctViabilityObj <- synGet("syn4260137")
 ctd2PctViability <- fread(getFileLocation(ctd2PctViabilityObj), data.table=FALSE)
 ctd2PctViabilityLINCS <- ctd2PctViability %>% filter(cell_line_name %in% ctd2LineNames)
+
+# Human Protein Atlas
+hpaLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
+hpaObj <- synGet("syn4487737")
+hpa <- fread(getFileLocation(hpaObj), data.table=FALSE)
+hpaLINCS <- hpa %>% filter(Sample %in% hpaLineNames)
+
+hpaLINCSMatrix <- hpaLINCS %>% dcast(Gene ~ Sample, value.var="Value")
+hpaLINCSAbundance <- hpaLINCS %>% dcast(Gene ~ Sample, value.var="Abundance")
