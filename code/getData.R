@@ -3,15 +3,26 @@ library(tidyr)
 library(data.table)
 library(reshape2)
 library(synapseClient)
+library(rGithubClient)
 synapseLogin()
+
+repo <- getRepo("kdaily/MEP-LINCS_Common_Lines", ref="branch", refName="master")
+script <- getPermlink(repo, "code/getData.R")
+
+projectId <- "syn4259323"
+proj <- synGet(projectId)
 
 # CCLE
 ccleLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
 
 # CCLE Gene Expression (maybe processed?)
-ccleGEObj <- synGet("syn2293298")
+id <- "syn2293298"
+ccleGEObj <- synGet(id)
 ccleGE <- fread(getFileLocation(ccleGEObj), data.table=FALSE)
 ccleGELINCS <- ccleGE[, ccleLineNames]
+write.csv(ccleGELINCS, file="CCLE_GE_LINCS.csv")
+f <- File("CCLE_GE_LINCS.csv", parentId=proj)
+act <- Activity(used=id, executed=thisScript)
 
 # CCLE Copy Number
 ccleCNAObj <- synGet("syn2293299")
