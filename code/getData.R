@@ -12,6 +12,8 @@ thisScript <- getPermlink(repo, "code/getData.R")
 projectId <- "syn4259323"
 proj <- synGet(projectId)
 
+availLines <- c() 
+                    
 # CCLE
 ccleLineNames <- c("MCF7", "PC3", "YAPC", "A375", "A549")
 
@@ -33,6 +35,9 @@ act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
 f <- synStore(f)
 
+ccleGELineNames <- data.frame(source="CCLE Gene Expression", 
+                              line=intersect(ccleLineNames, colnames(ccleGELINCS)))
+
 # CCLE Copy Number
 id <- "syn2293299"
 fn <- "CCLE_CNA_LINCS.csv"
@@ -47,6 +52,10 @@ synSetAnnotations(f) <- list(source="CCLE", dataType="DNA",
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
 f <- synStore(f)
+
+availLines <- rbind(availLines, 
+                    data.frame(source="CCLE CNA", 
+                              line=intersect(ccleLineNames, colnames(ccleCNALINCS))))
 
 # CCLE Drug EC50
 # Data is cell lines (rows) x drugs (columns)
@@ -67,6 +76,11 @@ act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
 f <- synStore(f)
 
+availLines <- rbind(availLines, 
+                    data.frame(source="CCLE EC50", 
+                               line=intersect(ccleLineNames, colnames(ccleEC50LINCS))))
+
+
 # CCLE Drug IC50
 # Data is cell lines (rows) x drugs (columns)
 id <- "syn2293303"
@@ -86,6 +100,10 @@ act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
 f <- synStore(f)
 
+availLines <- rbind(availLines, 
+                    data.frame(source="CCLE IC50", 
+                               line=intersect(ccleLineNames, colnames(ccleIC50LINCS))))
+
 # Broad CTD2
 ctd2LineNames <- c("MCF7", "PC3", "YAPC", "A375", "A549")
 
@@ -103,6 +121,10 @@ act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
 f <- synStore(f)
 
+availLines <- rbind(availLines, 
+                    data.frame(source="CTD2 AUC", 
+                               line=intersect(ctd2LineNames, ctd2AUCLINCS$cell_line_name)))
+
 # Raw viability
 id <- "syn4260136"
 fn <- "CTD2_RawViability_LINCS.csv"
@@ -116,6 +138,11 @@ synSetAnnotations(f) <- list(source="CTD2", dataType="drug",
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
 f <- synStore(f)
+
+availLines <- rbind(availLines, 
+                    data.frame(source="CTD2 Raw Viability", 
+                               line=intersect(ctd2LineNames, 
+                                              ctd2RawViabilityLINCS$cell_line_name)))
 
 # Avg pct viability
 id <- "syn4260137"
@@ -131,6 +158,11 @@ act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
 f <- synStore(f)
 
+availLines <- rbind(availLines, 
+                    data.frame(source="CTD2 Avg Pct Viability", 
+                               line=intersect(ctd2LineNames, 
+                                              ctd2PctViabilityLINCS$cell_line_name)))
+
 # Human Protein Atlas
 hpaLineNames <- c("MCF7", "PC3", "YAPC", "A375", "A549")
 
@@ -138,6 +170,10 @@ id <- "syn4487737"
 hpaObj <- synGet(id)
 hpa <- fread(getFileLocation(hpaObj), data.table=FALSE)
 hpaLINCS <- hpa %>% filter(Sample %in% hpaLineNames)
+
+availLines <- rbind(availLines, 
+                    data.frame(source="Human Protein Atlas", 
+                               line=intersect(hpaLineNames, hpaLINCS$Sample)))
 
 fn <- "HPA_FPKM_LINCS.csv"
 hpaLINCSFPKM <- hpaLINCS %>% dcast(Gene ~ Sample, value.var="Value")
@@ -174,6 +210,11 @@ synSetAnnotations(f) <- list(source="JWGray", dataType="mRNA",
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
 f <- synStore(f)
+
+availLines <- rbind(availLines, 
+                    data.frame(source="JW Gray", 
+                               line=intersect(grayLineNames, colnames(grayExonLINCS))))
+
 
 id <- "syn2347012"
 fn <- "JWGray_RPPA_LINCS.csv"
@@ -254,6 +295,11 @@ sangerSense <- read.csv(getFileLocation(sangerSensObj))
 sangerSenseLINCS <- sangerSense %>%
   filter(Cell.Line %in% sangerLineNames)
 
+availLines <- rbind(availLines, 
+                    data.frame(source="Sanger", 
+                               line=intersect(sangerLineNames, sangerSenseLINCS$Cell.Line)))
+
+
 sangerSenseIC50LINCS <- sangerSenseLINCS %>%
   select(Cell.Line, Cosmic_ID, Cancer.Type, Tissue, ends_with("IC_50"))
 colnames(sangerSenseIC50LINCS) <- gsub("_IC_50", "", colnames(sangerSenseIC50LINCS))
@@ -281,3 +327,8 @@ synSetAnnotations(f) <- list(source="Sanger", dataType="drug",
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
 f <- synStore(f)
+
+availTable <- availLines %>% mutate(available=TRUE) %>% dcast(source ~ line)
+availTable[is.na(availTable)] <- FALSE
+
+
