@@ -38,7 +38,8 @@ id <- "syn2293299"
 fn <- "CCLE_CNA_LINCS.csv"
 ccleCNAObj <- synGet(id)
 ccleCNA <- fread(getFileLocation(ccleCNAObj), data.table=FALSE)
-ccleCNALINCS <- ccleCNA[, ccleLineNames]
+ccleCNALINCS <- ccleCNA[, c("V1", ccleLineNames)] %>%
+  rename(GeneSymbol=V1)
 write.csv(ccleCNALINCS, file=fn)
 f <- File(fn, name="CCLE CNA", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="CCLE", dataType="DNA", 
