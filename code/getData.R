@@ -53,7 +53,8 @@ f <- synStore(f)
 id <- "syn2293304"
 fn <- "CCLE_EC50_LINCS.csv"
 ccleEC50Obj <- synGet(id)
-ccleEC50LINCS <- fread(getFileLocation(ccleEC50Obj), data.table=FALSE) %>%
+ccleEC50 <- fread(getFileLocation(ccleEC50Obj), data.table=FALSE)
+ccleEC50LINCS <- ccleEC50 %>%
   rename(cell_line_name=V1) %>% filter(cell_line_name %in% ccleLineNames) %>%
   melt(id.vars='cell_line_name') %>%
   dcast(variable ~ cell_line_name, value.var = 'value') %>%
@@ -71,7 +72,8 @@ f <- synStore(f)
 id <- "syn2293303"
 fn <- "CCLE_IC50_LINCS.csv"
 ccleIC50Obj <- synGet(id)
-ccleIC50LINCS <- fread(getFileLocation(ccleIC50Obj), data.table=FALSE) %>%
+ccleIC50 <- fread(getFileLocation(ccleIC50Obj), data.table=FALSE)
+ccleIC50LINCS <- ccleIC50 %>%
   rename(cell_line_name=V1) %>% filter(cell_line_name %in% ccleLineNames) %>%
   melt(id.vars='cell_line_name') %>%
   dcast(variable ~ cell_line_name, value.var = 'value') %>%
