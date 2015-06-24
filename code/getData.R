@@ -13,7 +13,7 @@ projectId <- "syn4259323"
 proj <- synGet(projectId)
 
 # CCLE
-ccleLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
+ccleLineNames <- c("MCF7", "PC3", "YAPC", "A375", "A549")
 
 # CCLE Gene Expression (maybe processed?)
 id <- "syn2293298"
