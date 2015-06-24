@@ -249,7 +249,7 @@ sangerLineNames <- c("MCF7", "PC3", "YAPC", "A375", "A549")
 
 id <- "syn4513928"
 sangerSensObj <- synGet(id)
-sangerSense <- fread(getFileLocation(sangerSensObj), data.table=FALSE)
+sangerSense <- read.csv(getFileLocation(sangerSensObj))
 
 sangerSenseLINCS <- sangerSense %>%
   filter(Cell.Line %in% sangerLineNames)
