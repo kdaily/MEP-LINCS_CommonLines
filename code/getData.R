@@ -87,7 +87,7 @@ generatedBy(f) <- act
 f <- synStore(f)
 
 # Broad CTD2
-ctd2LineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
+ctd2LineNames <- c("MCF7", "PC3", "YAPC", "A375", "A549")
 
 # AUC
 id <- "syn4260138"
@@ -132,7 +132,7 @@ generatedBy(f) <- act
 f <- synStore(f)
 
 # Human Protein Atlas
-hpaLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
+hpaLineNames <- c("MCF7", "PC3", "YAPC", "A375", "A549")
 
 id <- "syn4487737"
 hpaObj <- synGet(id)
