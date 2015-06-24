@@ -13,7 +13,7 @@ projectId <- "syn4259323"
 proj <- synGet(projectId)
 
 # CCLE
-ccleLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
+ccleLineNames <- c("MCF7", "PC3", "YAPC", "A375", "A549")
 
 # CCLE Gene Expression (maybe processed?)
 id <- "syn2293298"
@@ -38,7 +38,8 @@ id <- "syn2293299"
 fn <- "CCLE_CNA_LINCS.csv"
 ccleCNAObj <- synGet(id)
 ccleCNA <- fread(getFileLocation(ccleCNAObj), data.table=FALSE)
-ccleCNALINCS <- ccleCNA[, ccleLineNames]
+ccleCNALINCS <- ccleCNA[, c("V1", ccleLineNames)] %>%
+  rename(GeneSymbol=V1)
 write.csv(ccleCNALINCS, file=fn)
 f <- File(fn, name="CCLE CNA", parentId=proj@properties$id)
 synSetAnnotations(f) <- list(source="CCLE", dataType="DNA", 
@@ -52,7 +53,8 @@ f <- synStore(f)
 id <- "syn2293304"
 fn <- "CCLE_EC50_LINCS.csv"
 ccleEC50Obj <- synGet(id)
-ccleEC50LINCS <- fread(getFileLocation(ccleEC50Obj), data.table=FALSE) %>%
+ccleEC50 <- fread(getFileLocation(ccleEC50Obj), data.table=FALSE)
+ccleEC50LINCS <- ccleEC50 %>%
   rename(cell_line_name=V1) %>% filter(cell_line_name %in% ccleLineNames) %>%
   melt(id.vars='cell_line_name') %>%
   dcast(variable ~ cell_line_name, value.var = 'value') %>%
@@ -70,7 +72,8 @@ f <- synStore(f)
 id <- "syn2293303"
 fn <- "CCLE_IC50_LINCS.csv"
 ccleIC50Obj <- synGet(id)
-ccleIC50LINCS <- fread(getFileLocation(ccleIC50Obj), data.table=FALSE) %>%
+ccleIC50 <- fread(getFileLocation(ccleIC50Obj), data.table=FALSE)
+ccleIC50LINCS <- ccleIC50 %>%
   rename(cell_line_name=V1) %>% filter(cell_line_name %in% ccleLineNames) %>%
   melt(id.vars='cell_line_name') %>%
   dcast(variable ~ cell_line_name, value.var = 'value') %>%
@@ -84,7 +87,7 @@ generatedBy(f) <- act
 f <- synStore(f)
 
 # Broad CTD2
-ctd2LineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
+ctd2LineNames <- c("MCF7", "PC3", "YAPC", "A375", "A549")
 
 # AUC
 id <- "syn4260138"
@@ -129,7 +132,7 @@ generatedBy(f) <- act
 f <- synStore(f)
 
 # Human Protein Atlas
-hpaLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
+hpaLineNames <- c("MCF7", "PC3", "YAPC", "A375", "A549")
 
 id <- "syn4487737"
 hpaObj <- synGet(id)
@@ -157,7 +160,7 @@ generatedBy(f) <- act
 f <- synStore(f)
 
 # JW Gray
-grayLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
+grayLineNames <- c("MCF7", "PC3", "YAPC", "A375", "A549")
 
 id <- "syn2346647"
 fn <- "JWGray_Exon_LINCS.csv"
@@ -242,11 +245,11 @@ generatedBy(f) <- act
 f <- synStore(f)
 
 # Sanger
-sangerLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
+sangerLineNames <- c("MCF7", "PC3", "YAPC", "A375", "A549")
 
 id <- "syn4513928"
 sangerSensObj <- synGet(id)
-sangerSense <- fread(getFileLocation(sangerSensObj), data.table=FALSE)
+sangerSense <- read.csv(getFileLocation(sangerSensObj))
 
 sangerSenseLINCS <- sangerSense %>%
   filter(Cell.Line %in% sangerLineNames)
