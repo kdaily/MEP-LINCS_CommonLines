@@ -160,7 +160,7 @@ generatedBy(f) <- act
 f <- synStore(f)
 
 # JW Gray
-grayLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
+grayLineNames <- c("MCF7", "PC3", "YAPC", "A375", "A549")
 
 id <- "syn2346647"
 fn <- "JWGray_Exon_LINCS.csv"
@@ -245,7 +245,7 @@ generatedBy(f) <- act
 f <- synStore(f)
 
 # Sanger
-sangerLineNames <- c("MCF7", "PC3", "HPAC", "A375", "A549")
+sangerLineNames <- c("MCF7", "PC3", "YAPC", "A375", "A549")
 
 id <- "syn4513928"
 sangerSensObj <- synGet(id)
