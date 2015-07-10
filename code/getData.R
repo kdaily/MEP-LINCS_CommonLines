@@ -35,8 +35,9 @@ act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
 f <- synStore(f)
 
-ccleGELineNames <- data.frame(source="CCLE Gene Expression", 
-                              line=intersect(ccleLineNames, colnames(ccleGELINCS)))
+availLines <- rbind(availLines,
+                    data.frame(source="CCLE Gene Expression", 
+                               line=intersect(ccleLineNames, colnames(ccleGELINCS))))
 
 # CCLE Copy Number
 id <- "syn2293299"
