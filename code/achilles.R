@@ -6,7 +6,7 @@ library(synapseClient)
 library(rGithubClient)
 synapseLogin()
 
-repo <- getRepo("kdaily/MEP-LINCS_CommonLines", ref="branch", refName="master")
+repo <- getRepo("kdaily/MEP-LINCS_CommonLines", ref="branch", refName="achilles")
 thisScript <- getPermlink(repo, "code/achilles.R")
 
 projectId <- "syn4259323"
@@ -28,3 +28,21 @@ synSetAnnotations(f) <- list(source="Achilles", dataType="rnai", fileType="genom
 act <- Activity(used=id, executed=thisScript)
 generatedBy(f) <- act
 f <- synStore(f)
+
+
+id <- "syn4598413"
+fn <- "Achilles_shRNA_LINCS.csv"
+achillesshRNAObj <- synGet(id)
+
+achillesshRNA <- fread(getFileLocation(achillesshRNAObj), skip=2, data.table=FALSE,
+                    select=c("Name", "Description", achillesLineNames)) %>%
+  rename(MCF7=MCF7_BREAST, A549=A549_LUNG)
+
+write.csv(achillesshRNA, file=fn)
+f <- File(fn, name="Achilles QC rnai", parentId=proj@properties$id)
+synSetAnnotations(f) <- list(source="Achilles", dataType="rnai", fileType="genomicMatrix")
+act <- Activity(used=id, executed=thisScript)
+generatedBy(f) <- act
+f <- synStore(f)
+
+
